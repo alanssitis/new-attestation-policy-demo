@@ -1,0 +1,13 @@
+[submodule "in-toto"]
+	path = in-toto
+	url = git@github.com:alanssitis/in-toto-golang.git
+	branch = demo-test
+[submodule "scai-demos"]
+	path = scai-demos
+	url = git@github.com:alanssitis/scai-demos.git
+[submodule "attestation-verifier"]
+	path = attestation-verifier
+	url = git@github.com:alanssitis/attestation-verifier.git
+[submodule "in-toto-golang"]
+	path = in-toto-golang
+	url = git@github.com:alanssitis/in-toto-golang.git
