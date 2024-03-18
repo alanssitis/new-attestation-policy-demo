@@ -1,12 +1,14 @@
 package cmd
 
 import (
+	"context"
 	"crypto/sha256"
 	"encoding/hex"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
+	"io/ioutil"
 	"log"
 	"os"
 	"os/exec"
@@ -15,7 +17,8 @@ import (
 	link "github.com/in-toto/attestation/go/predicates/link/v0"
 	ita "github.com/in-toto/attestation/go/v1"
 	intoto "github.com/in-toto/in-toto-golang/in_toto"
-	"github.com/in-toto/scai-demos/scai-gen/fileio"
+	"github.com/secure-systems-lab/go-securesystemslib/dsse"
+	"github.com/secure-systems-lab/go-securesystemslib/signerverifier"
 	"github.com/spf13/cobra"
 	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/types/known/structpb"
@@ -112,8 +115,33 @@ func run(cmd *cobra.Command, fullCmd []string) error {
 		PredicateType: "https://in-toto.io/attestation/link/v0.3",
 		Predicate:     predStruct,
 	}
+	statementBytes, err := protojson.Marshal(statement)
+	if err != nil {
+		return err
+	}
 
-	return fileio.WritePbToFile(statement, linkpath, false)
+    k, err := signerverifier.LoadRSAPSSKeyFromFile(keypath)
+	if err != nil {
+		return err
+	}
+    sv, err := signerverifier.NewRSAPSSSignerVerifierFromSSLibKey(k)
+	if err != nil {
+		return err
+	}
+    signer, err := dsse.NewEnvelopeSigner(sv)
+	if err != nil {
+		return err
+	}
+    envelope, err := signer.SignPayload(context.TODO(), "application/vnd.in-toto+json", statementBytes)
+	if err != nil {
+		return err
+	}
+    envelopeJson, err := json.Marshal(envelope)
+	if err != nil {
+		return err
+	}
+
+	return ioutil.WriteFile(linkpath, envelopeJson, 0644)
 }
 
 func runCommand(fullCmd []string) (map[string]interface{}, error) {

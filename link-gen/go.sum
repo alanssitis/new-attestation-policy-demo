@@ -9,8 +9,6 @@ github.com/in-toto/attestation v1.0.1 h1:DgX1XuBkryTpj1Piq8AiMK3CMfEcec3Qv6+Ku+u
 github.com/in-toto/attestation v1.0.1/go.mod h1:hCR5COCuENh5+VfojEkJnt7caOymbEgvyZdKifD6pOw=
 github.com/in-toto/in-toto-golang v0.9.0 h1:tHny7ac4KgtsfrG6ybU8gVOZux2H8jN05AXJ9EBM1XU=
 github.com/in-toto/in-toto-golang v0.9.0/go.mod h1:xsBVrVsHNsB61++S6Dy2vWosKhuA3lUTQd+eF9HdeMo=
-github.com/in-toto/scai-demos v0.0.0-20240312182914-7ca542965b1a h1:zL1s+I4egYgPho16Ycx4kVbmKLZcwJrMmha7dfrbWCQ=
-github.com/in-toto/scai-demos v0.0.0-20240312182914-7ca542965b1a/go.mod h1:YeY7wvSmPDjCo/D1MizarwQyAhmyvNBr4kGJzcwrNCw=
 github.com/inconshreveable/mousetrap v1.1.0 h1:wN+x4NVGpMsO7ErUn/mUI3vEoE6Jt13X2s0bqwp9tc8=
 github.com/inconshreveable/mousetrap v1.1.0/go.mod h1:vpF70FUmC8bwa3OWnCshd2FqLfsEA9PFc4w1p2J65bw=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
