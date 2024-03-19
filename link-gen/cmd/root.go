@@ -16,7 +16,6 @@ import (
 
 	link "github.com/in-toto/attestation/go/predicates/link/v0"
 	ita "github.com/in-toto/attestation/go/v1"
-	intoto "github.com/in-toto/in-toto-golang/in_toto"
 	"github.com/secure-systems-lab/go-securesystemslib/dsse"
 	"github.com/secure-systems-lab/go-securesystemslib/signerverifier"
 	"github.com/spf13/cobra"
@@ -55,19 +54,6 @@ func Execute() {
 }
 
 func run(cmd *cobra.Command, fullCmd []string) error {
-	key := intoto.Key{}
-	if len(keypath) > 0 {
-		if _, err := os.Stat(keypath); err == nil {
-			if err := key.LoadKeyDefaults(keypath); err != nil {
-				return fmt.Errorf("invalid key at %s: %w", keypath, err)
-			}
-		} else {
-			return fmt.Errorf("key not found at %s: %w", keypath, err)
-		}
-	}
-	linkname := fmt.Sprintf("%s.%.8s.link", stepname, key.KeyID)
-	linkpath := filepath.Join("./", linkname)
-
 	materials, err := generateResourceDescriptorFromArtifacts(materials)
 	if err != nil {
 		return err
@@ -140,6 +126,9 @@ func run(cmd *cobra.Command, fullCmd []string) error {
 	if err != nil {
 		return err
 	}
+
+	linkname := fmt.Sprintf("%s.%.8s.link", stepname, k.KeyID)
+	linkpath := filepath.Join("./", linkname)
 
 	return ioutil.WriteFile(linkpath, envelopeJson, 0644)
 }
