@@ -26,6 +26,7 @@ import (
 var (
 	stepname  string
 	keypath   string
+    outputdir string
 	materials []string
 	products  []string
 )
@@ -40,6 +41,7 @@ var rootcmd = &cobra.Command{
 func init() {
 	rootcmd.Flags().StringVarP(&stepname, "name", "n", "", "Name of link metadata.")
 	rootcmd.Flags().StringVarP(&keypath, "key", "k", "", "Path of key to sign")
+	rootcmd.Flags().StringVarP(&outputdir, "outdir", "o", "./", "Output directory")
 	rootcmd.Flags().StringArrayVarP(&materials, "materials", "m", []string{}, "Path of key to sign")
 	rootcmd.Flags().StringArrayVarP(&products, "products", "p", []string{}, "Path of key to sign")
 	rootcmd.MarkFlagRequired("name")
@@ -127,8 +129,11 @@ func run(cmd *cobra.Command, fullCmd []string) error {
 		return err
 	}
 
+    if err = os.MkdirAll(outputdir,os.ModePerm); err != nil {
+        return err
+    }
 	linkname := fmt.Sprintf("%s.%.8s.link", stepname, k.KeyID)
-	linkpath := filepath.Join("./", linkname)
+	linkpath := filepath.Join(outputdir, linkname)
 
 	return ioutil.WriteFile(linkpath, envelopeJson, 0644)
 }
