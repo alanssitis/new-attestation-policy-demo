@@ -1,0 +1,28 @@
+expires: "2024-06-11T12:59:59Z"
+functionaries:
+  alice:
+    keyType: rsa
+    scheme: rsa
+    keyIDHashAlgorithms:
+    - sha256
+    keyID: 556caebdc0877eed53d419b60eddb1e57fa773e4e31d70698b588f3e9cc48b35
+steps:
+- name: untar
+  expectedProducts:
+  - "CREATE todo"
+  - "CREATE todo"
+- name: build_external
+  expectedMaterials:
+  - "MATCH todo"
+  expectedProducts:
+  - "CREATE"
+- name: build_main
+  expectedMaterials:
+  - "MATCH todo"
+  expectedProducts:
+  - "CREATE"
+- name: build_binary
+  expectedMaterials:
+  - "MATCH todo"
+  expectedProducts:
+  - "CREATE"

@@ -31,12 +31,19 @@ def prompt_key(prompt):
 
 def clean():
     # reset project
-    os.chdir(PROJECT_DIR)
-    subprocess.call(shlex.split("make clean"))
-    os.chdir(PWD)
+    subprocess.call(shlex.split(f"rm -rf {PROJECT_DIR}"))
 
 
 def show_project_demo():
+
+    prompt_key("Untar project")
+    os.mkdir(PROJECT_DIR)
+    subprocess.call(shlex.split("cp project.tar.gz project"))
+    os.chdir(PROJECT_DIR)
+    tar_cmd = "tar xvf project.tar.gz"
+    print_command(tar_cmd)
+    subprocess.call(shlex.split(tar_cmd))
+    os.chdir(PWD)
 
     prompt_key("Show the 'project' file structure.")
     tree_project_cmd = "tree project"
