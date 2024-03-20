@@ -81,7 +81,60 @@ def show_project_demo():
 
 def supply_chain():
 
-    prompt_key("TODO")
+    prompt_key("Supply Chain with in-toto")
+
+    prompt_key("Untar project")
+    os.mkdir(PROJECT_DIR)
+    subprocess.call(shlex.split("cp project.tar.gz project"))
+    os.chdir(PROJECT_DIR)
+    tar_cmd = "../link-gen/bin/link-gen -k ../credentials/alice.pem -n untar -m project.tar.gz -p main.c -p external.c -p external.h -p Makefile -p it.Makefile -- tar xvf project.tar.gz"
+    print_command(tar_cmd)
+    subprocess.call(shlex.split(tar_cmd))
+    os.chdir(PWD)
+
+    prompt_key("Show the 'project' file structure.")
+    tree_project_cmd = "tree project"
+    print_command(tree_project_cmd)
+    subprocess.call(shlex.split(tree_project_cmd))
+    os.chdir(PROJECT_DIR)
+
+    prompt_key("Build the 'project'.")
+    make_cmd = "make -f it.Makefile"
+    print_command(make_cmd)
+    subprocess.call(shlex.split(make_cmd))
+
+    prompt_key("Run the executable.")
+    run_project_cmd = "./testy"
+    print_command(run_project_cmd)
+    subprocess.call(shlex.split(run_project_cmd))
+    os.chdir(MALICIOUS_FILES_DIR)
+
+    os.chdir(PWD)
+    prompt_key("Verify in-toto metadata.")
+    verify_intoto_cmd = "./attestation-verifier/attestation-verifier -a metadata -l layout.yaml"
+    print_command(verify_intoto_cmd)
+    subprocess.call(shlex.split(verify_intoto_cmd))
+    os.chdir(MALICIOUS_FILES_DIR)
+
+    prompt_key("Inject malicious object file.")
+    print_command(make_cmd)
+    subprocess.call(shlex.split(make_cmd))
+    os.chdir(PROJECT_DIR)
+
+    prompt_key("Build the project again.")
+    print_command(make_cmd)
+    subprocess.call(shlex.split(make_cmd))
+
+    prompt_key("Run the executable again.")
+    run_project_cmd = "./testy"
+    print_command(run_project_cmd)
+    subprocess.call(shlex.split(run_project_cmd))
+
+    os.chdir(PWD)
+
+    prompt_key("Verify in-toto metadata for malicious.")
+    print_command(verify_intoto_cmd)
+    subprocess.call(shlex.split(verify_intoto_cmd))
 
 
 def main():
@@ -105,6 +158,7 @@ def main():
         NO_PROMPT = True
 
     show_project_demo()
+    clean()
     supply_chain()
 
 

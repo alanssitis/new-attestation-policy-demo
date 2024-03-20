@@ -1,28 +1,77 @@
 expires: "2024-06-11T12:59:59Z"
 functionaries:
   alice:
+    keyPath: credentials/alice.pub.pem
     keyType: rsa
     scheme: rsa
-    keyIDHashAlgorithms:
-    - sha256
-    keyID: 556caebdc0877eed53d419b60eddb1e57fa773e4e31d70698b588f3e9cc48b35
 steps:
+
 - name: untar
   expectedProducts:
-  - "CREATE todo"
-  - "CREATE todo"
+  - "CREATE main.c"
+  - "CREATE external.c"
+  - "CREATE external.h"
+  - "CREATE Makefile"
+  - "CREATE it.Makefile"
+  - "DISALLOW *"
+  expectedPredicates:
+  - predicateType: https://in-toto.io/attestation/link/v0.3
+    expectedAttributes:
+    - rule: "predicate.command == ['tar', 'xvf', 'project.tar.gz']"
+      allowIfNoClaim: true
+      warn: true
+    functionaries:
+    - alice
+
 - name: build_external
   expectedMaterials:
-  - "MATCH todo"
+  - "MATCH external.c WITH products FROM untar"
+  - "ALLOW Makefile"
+  - "DISALLOW *"
   expectedProducts:
-  - "CREATE"
+  - "CREATE external.o"
+  - "DISALLOW *"
+  expectedPredicates:
+  - predicateType: https://in-toto.io/attestation/link/v0.3
+    expectedAttributes:
+    - rule: "predicate.command == ['cc', '-c', '-o', 'external.o', 'external.c']"
+      allowIfNoClaim: true
+      warn: true
+    functionaries:
+    - alice
+
 - name: build_main
   expectedMaterials:
-  - "MATCH todo"
+  - "MATCH main.c WITH products FROM untar"
+  - "MATCH external.h WITH products FROM untar"
+  - "ALLOW Makefile"
+  - "DISALLOW *"
   expectedProducts:
-  - "CREATE"
-- name: build_binary
+  - "CREATE main.o"
+  - "DISALLOW *"
+  expectedPredicates:
+  - predicateType: https://in-toto.io/attestation/link/v0.3
+    expectedAttributes:
+    - rule: "predicate.command == ['cc', '-c', '-o', 'main.o', 'main.c']"
+      allowIfNoClaim: true
+      warn: true
+    functionaries:
+    - alice
+
+- name: build_testy
   expectedMaterials:
-  - "MATCH todo"
+  - "MATCH main.o WITH products FROM build_main"
+  - "MATCH external.o WITH products FROM build_external"
+  - "ALLOW Makefile"
+  - "DISALLOW *"
   expectedProducts:
-  - "CREATE"
+  - "CREATE testy"
+  - "DISALLOW *"
+  expectedPredicates:
+  - predicateType: https://in-toto.io/attestation/link/v0.3
+    expectedAttributes:
+    - rule: "predicate.command == ['cc', '-o', 'testy', 'main.o', 'external.o']"
+      allowIfNoClaim: true
+      warn: true
+    functionaries:
+    - alice

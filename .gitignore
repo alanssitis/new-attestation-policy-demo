@@ -1,3 +1,5 @@
 *.o
 testy
 bin
+project/
+metadata/
