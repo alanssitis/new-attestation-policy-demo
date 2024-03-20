@@ -87,7 +87,7 @@ def supply_chain():
     os.mkdir(PROJECT_DIR)
     subprocess.call(shlex.split("cp project.tar.gz project"))
     os.chdir(PROJECT_DIR)
-    tar_cmd = "../link-gen/bin/link-gen -k ../credentials/alice.pem -n untar -m project.tar.gz -p main.c -p external.c -p external.h -p Makefile -p it.Makefile -- tar xvf project.tar.gz"
+    tar_cmd = "../link-gen/bin/link-gen -k ../credentials/alice.pem -n untar -m project.tar.gz -p main.c -p external.c -p external.h -p Makefile -p it.Makefile -o ../metadata -- tar xvf project.tar.gz"
     print_command(tar_cmd)
     subprocess.call(shlex.split(tar_cmd))
     os.chdir(PWD)
@@ -117,8 +117,8 @@ def supply_chain():
     os.chdir(MALICIOUS_FILES_DIR)
 
     prompt_key("Inject malicious object file.")
-    print_command(make_cmd)
-    subprocess.call(shlex.split(make_cmd))
+    print_command("make")
+    subprocess.call(shlex.split("make"))
     os.chdir(PROJECT_DIR)
 
     prompt_key("Build the project again.")
