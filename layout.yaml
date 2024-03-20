@@ -26,6 +26,7 @@ steps:
 - name: build_external
   expectedMaterials:
   - "MATCH external.c WITH products FROM untar"
+  - "MATCH external.h WITH products FROM untar"
   - "ALLOW Makefile"
   - "DISALLOW *"
   expectedProducts:
