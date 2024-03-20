@@ -1,3 +1,6 @@
 [submodule "attestation-verifier"]
 	path = attestation-verifier
 	url = git@github.com:in-toto/attestation-verifier.git
+[submodule "essd"]
+	path = essd
+	url = git@github.com:adityasaky/essd.git
