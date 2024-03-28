@@ -157,9 +157,11 @@ def main():
         global NO_PROMPT
         NO_PROMPT = True
 
+    clean()
     show_project_demo()
     clean()
     supply_chain()
+    clean()
 
 
 if __name__ == '__main__':
